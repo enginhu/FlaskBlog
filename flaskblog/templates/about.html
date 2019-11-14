@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <h1>Home Page</h1>
+
+        {% if about_content %}
+            {{ about_content }}
+        {% else %}
+            <p class="lead">About me</p>
+        {% endif %}
+
+
+{% endblock content %}
