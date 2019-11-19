@@ -5,14 +5,14 @@ from PIL import Image
 from flask import render_template, current_app
 from flask_mail import Message
 
-from flaskblog import app, mail
+from flaskblog import mail
 
 
 def save_picture(form_picture):
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_fn = random_hex + f_ext
-    picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_fn)
+    picture_path = os.path.join(current_app.root_path, 'static/profile_pics', picture_fn)
     output_size = (125, 125)
     i = Image.open(form_picture)
     i.thumbnail(output_size)
@@ -31,7 +31,7 @@ def send_email(subject, sender, recipients, text_body, html_body):
 def send_reset_email(user):
     token = user.get_reset_token()
     send_email('[Flask Blog] Reset Your Password',
-               sender=current_app.config['ADMINS'][0],
+               sender=current_.config['ADMINS'][0],
                recipients=[user.email],
                text_body=render_template('email/reset_password.txt', user=user, token=token),
                html_body=render_template('email/reset_password.html', user=user, token=token))

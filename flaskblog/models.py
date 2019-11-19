@@ -1,7 +1,8 @@
+from flask import current_app
 from time import time
 from datetime import datetime
 import jwt
-from flaskblog import db, login_manager, app
+from flaskblog import db, login_manager
 from flask_login import UserMixin
 
 
@@ -19,13 +20,13 @@ class User(UserMixin, db.Model):
     posts = db.relationship('Post', backref='author', lazy=True)
 
     def get_reset_token(self, expires_sec=1800):
-        return jwt.encode({'reset_password': self.id, 'exp': time() + expires_sec}, app.config['SECRET_KEY'],
+        return jwt.encode({'reset_password': self.id, 'exp': time() + expires_sec}, current_app.config['SECRET_KEY'],
                           algorithm='HS256').decode('UTF-8')
 
     @staticmethod
     def verify_reset_token(token):
         try:
-            user_id = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])['reset_password']
+            user_id = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])['reset_password']
         except:
             return
         return User.query.get(user_id)
